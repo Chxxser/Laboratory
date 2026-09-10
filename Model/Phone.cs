@@ -12,7 +12,7 @@ namespace Model
         public string Brand { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
-        public int Color { get; set; }
+        public string Color { get; set; }
         public int Memory { get; set; }
         public decimal Price { get; set; }
         public bool Availability { get; set; }
@@ -20,7 +20,7 @@ namespace Model
         {
             string status;
             if (Availability == true) { status = "В наличии"; }
-            else { status = "Продан"; }
+            else { status = "Нет в наличии"; }
             return ($"{Id}. {Brand} {Model} ({Year}) - {Color}, {Memory} ГБ, {Price} руб. - {status}");
         }
     }
