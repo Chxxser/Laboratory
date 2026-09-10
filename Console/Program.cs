@@ -12,9 +12,34 @@ namespace ConsoleApp
         static void Main()
         {
             _logic.TestPhone();
+            while (true)
+            {
+                ShowMenu();
+                string choice = Console.ReadLine();
 
-            
+                switch (choice)
+                {
+                    case "1": AddPhone(); break;
+                    case "2": ShowAllPhones(); break;
+                    case "3": FindPhoneById(); break;
+                    case "4": UpdatePhone(); break;
+                    case "5": DeletePhone(); break;
+                    case "6": GroupByMemory(); break;
+                    case "7": ShowTopExpensive(); break;
+                    case "0":
+                        Console.WriteLine("До свидания");
+                        return;
+                    default:
+                        Console.WriteLine("Такого выбора нет в меню");
+                        break;
+                }
+
+                Console.WriteLine("\nНажмите любую клавишу");
+                Console.ReadKey();
+            }
         }
+
+
 
         static void ShowMenu()
         {
@@ -199,8 +224,56 @@ namespace ConsoleApp
                 bool success = _logic.DeletePhone(id);
                 if (success) { Console.WriteLine("\nТелефон успешно удален"); }
             }
-            else { Console.WriteLine("\nОперация отменена."); }
+            else { Console.WriteLine("\nОперация отменена"); }
+        }
+        static void GroupByMemory()
+        {
+            Console.WriteLine("Группировка по памяти\n");
+
+            Dictionary<int, List<Phone>> groups = _logic.GroupMemory();
+
+            if (groups.Count == 0)
+            {
+                Console.WriteLine("Нет телефонов для группировки");
+                return;
+            }
+
+            foreach (var group in groups)
+            {
+                Console.WriteLine($"{group.Key} ГБ:");
+
+                foreach (Phone phone in group.Value)
+                {
+                    Console.WriteLine($"  - {phone.Brand} {phone.Model}");
+                }
+
+                Console.WriteLine();
+            }
         }
 
+        static void ShowTopExpensive()
+        {
+            Console.WriteLine("Топ самых дорогих телефонов\n");
+
+            Console.Write("Введите число топа, который хотите увидеть: ");
+            int count = int.Parse(Console.ReadLine());
+
+            List<Phone> top = _logic.ExpensivePhones(count);
+
+            if (top.Count == 0)
+            {
+                Console.WriteLine("Нет телефонов");
+                return;
+            }
+
+            Console.WriteLine($"\nТоп-{top.Count} самых дорогих телефона:\n");
+
+            int place = 1;
+            foreach (Phone phone in top)
+            {
+                Console.WriteLine($"{place}. {phone.Brand} {phone.Model} - {phone.Price} руб.");
+                place++;
+            }
+        }
     }
 }
