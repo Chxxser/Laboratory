@@ -32,7 +32,6 @@ namespace ConsoleApp
         }
         static void ShowMenu()
         {
-            Console.WriteLine();
             Console.WriteLine("=== На Горбушке у Ашота ===");
             Console.WriteLine("1. Добавить телефон");
             Console.WriteLine("2. Показать все телефоны");
