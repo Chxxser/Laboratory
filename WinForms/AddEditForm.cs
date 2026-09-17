@@ -10,20 +10,20 @@ namespace WinForms
         public string Brand { get; private set; }
         public string Model { get; private set; }
         public int Year { get; private set; }
-        public string CarColor { get; private set; }
+        public string PhoneColor { get; private set; }
         public decimal Price { get; private set; }
         public int Memory { get; private set; }
         public bool Availability { get; private set; }
 
-        private TextBox txtBrand;
-        private TextBox txtModel;
-        private TextBox txtYear;
-        private TextBox txtColor;
-        private TextBox txtPrice;
-        private TextBox txtMemory;
-        private CheckBox chkAvailability;
-        private Button btnSave;
-        private Button btnCancel;
+        public TextBox txtBrand;
+        public TextBox txtModel;
+        public TextBox txtYear;
+        public TextBox txtColor;
+        public TextBox txtPrice;
+        public TextBox txtMemory;
+        public CheckBox chkAvailability;
+        public Button btnSave;
+        public Button btnCancel;
 
         public AddEditForm(Phone phone = null)
         {
@@ -47,7 +47,7 @@ namespace WinForms
             }
         }
 
-        private void BuildForm()
+        public void BuildForm()
         {
             this.Size = new Size(400, 450);
             this.StartPosition = FormStartPosition.CenterParent;
@@ -107,7 +107,7 @@ namespace WinForms
             Controls.Add(btnCancel);
         }
 
-        private TextBox CreateField(string label, ref int y, int leftMargin, int labelWidth, int textBoxWidth)
+        public TextBox CreateField(string label, ref int y, int leftMargin, int labelWidth, int textBoxWidth)
         {
             Label lbl = new Label();
             lbl.Text = label;
@@ -126,13 +126,13 @@ namespace WinForms
             return txt;
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        public void BtnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void BtnSave_Click(object sender, EventArgs e)
+        public void BtnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtBrand.Text))
             {
@@ -196,7 +196,7 @@ namespace WinForms
             Brand = txtBrand.Text.Trim();
             Model = txtModel.Text.Trim();
             Year = year;
-            CarColor = txtColor.Text.Trim();   
+            PhoneColor = txtColor.Text.Trim();   
             Price = price;
             Memory = memory;
             Availability = chkAvailability.Checked;

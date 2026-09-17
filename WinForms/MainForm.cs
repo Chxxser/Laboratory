@@ -9,19 +9,19 @@ namespace WinForms
 {
     public class MainForm : Form
     {
-        private Logic.Logic _logic = new Logic.Logic();
+        public Logic.Logic _logic = new Logic.Logic();
 
-        private ListBox listBoxPhones;
-        private Button btnAdd;
-        private Button btnToggleView;
-        private Button btnFindById;
-        private Button btnEdit;
-        private Button btnDelete;
-        private Button btnGroupMemory;
-        private Button btnTopExpensive;
-        private Label lblTitle;
-        private Label lblCount;
-        private Label lblHint;
+        public ListBox listBoxPhones;
+        public Button btnAdd;
+        public Button btnToggleView;
+        public Button btnFindById;
+        public Button btnEdit;
+        public Button btnDelete;
+        public Button btnGroupMemory;
+        public Button btnTopExpensive;
+        public Label lblTitle;
+        public Label lblCount;
+        public Label lblHint;
 
         public MainForm()
         {
@@ -31,7 +31,7 @@ namespace WinForms
 
         private void BuildForm()
         {
-            this.Text = "Магазин телефонов Горбушка";
+            this.Text = "Магазин телефонов 'У АШОТА НА ГОРБУШКЕ'";
             this.Size = new Size(950, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.White;
@@ -53,7 +53,7 @@ namespace WinForms
             listBoxPhones.Visible = false;
 
             lblHint = new Label();
-            lblHint.Text = "Нажмите «Показать все»,\nчтобы увидеть список телефонов";
+            lblHint.Text = "Нажмите «Показать все», чтобы увидеть список телефонов";
             lblHint.Font = new Font("Arial", 14, FontStyle.Italic);
             lblHint.Location = new Point(120, 280);
             lblHint.Size = new Size(450, 80);
@@ -108,7 +108,7 @@ namespace WinForms
             Controls.Add(lblCount);
         }
 
-        private Button CreateButton(string text, int x, int y)
+        public Button CreateButton(string text, int x, int y)
         {
             Button btn = new Button();
             btn.Text = text;
@@ -124,7 +124,7 @@ namespace WinForms
             return btn;
         }
 
-        private void RefreshList()
+        public void RefreshList()
         {
             List<Phone> phones = _logic.AllPhone();
             listBoxPhones.DataSource = null;
@@ -133,8 +133,7 @@ namespace WinForms
             lblCount.Text = "Всего: " + phones.Count + " телефонов";
         }
 
-     
-        private void BtnToggleView_Click(object sender, EventArgs e)
+        public void BtnToggleView_Click(object sender, EventArgs e)
         {
             if (listBoxPhones.Visible == false)
             {
@@ -157,12 +156,12 @@ namespace WinForms
         }
 
   
-        private void BtnAdd_Click(object sender, EventArgs e)
+        public void BtnAdd_Click(object sender, EventArgs e)
         {
             AddEditForm form = new AddEditForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                _logic.AddPhone(form.Brand, form.Model, form.Year, form.CarColor,
+                _logic.AddPhone(form.Brand, form.Model, form.Year, form.PhoneColor,
                                 form.Price, form.Memory, form.Availability);
                 MessageBox.Show("Телефон добавлен", "Успех");
 
@@ -174,18 +173,15 @@ namespace WinForms
         }
 
         
-        private void BtnFindById_Click(object sender, EventArgs e)
+        public void BtnFindById_Click(object sender, EventArgs e)
         {
             string input = Microsoft.VisualBasic.Interaction.InputBox(
                 "Введите ID телефона:", "Поиск по ID", "");
 
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(input)) { return; }
 
             int id;
-            if (!int.TryParse(input, out id))
+            if (int.TryParse(input, out id) == false)
             {
                 MessageBox.Show("ID должен быть числом", "Ошибка");
                 return;
@@ -209,7 +205,7 @@ namespace WinForms
         }
 
     
-        private void BtnEdit_Click(object sender, EventArgs e)
+        public void BtnEdit_Click(object sender, EventArgs e)
         {
             if (listBoxPhones.Visible == false)
             {
@@ -229,14 +225,14 @@ namespace WinForms
             if (form.ShowDialog() == DialogResult.OK)
             {
                 _logic.UpdatePhone(selected.Id, form.Brand, form.Model, form.Year,
-                                   form.CarColor, form.Price, form.Memory, form.Availability);
+                                   form.PhoneColor, form.Price, form.Memory, form.Availability);
                 RefreshList();
                 MessageBox.Show("Телефон обновлён", "Успех");
             }
         }
 
 
-        private void BtnDelete_Click(object sender, EventArgs e)
+        public void BtnDelete_Click(object sender, EventArgs e)
         {
             if (listBoxPhones.Visible == false)
             {
@@ -298,7 +294,7 @@ namespace WinForms
             if (string.IsNullOrWhiteSpace(input)) return;
 
             int count;
-            if (!int.TryParse(input, out count) || count <= 0)
+            if (int.TryParse(input, out count)==false || count <= 0)
             {
                 MessageBox.Show("Введите корректное число");
                 return;
