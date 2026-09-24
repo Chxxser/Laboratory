@@ -15,7 +15,7 @@ namespace ConsoleApp
             {
                 ShowMenu();
                 string choice = Console.ReadLine();
-                Console.WriteLine();
+                Console.Clear();
                 switch (choice)
                 {
                     case "1": AddPhone(); break;
@@ -30,8 +30,12 @@ namespace ConsoleApp
                 }
             }
         }
+        /// <summary>
+        /// Меню
+        /// </summary>
         static void ShowMenu()
         {
+            Console.Clear();
             Console.WriteLine("=== На Горбушке у Ашота ===");
             Console.WriteLine("1. Добавить телефон");
             Console.WriteLine("2. Показать все телефоны");
@@ -43,6 +47,9 @@ namespace ConsoleApp
             Console.WriteLine("0. Выход");
             Console.Write("Ваш выбор: ");
         }
+        /// <summary>
+        /// Добавить телефон
+        /// </summary>
         static void AddPhone()
         {
             Console.WriteLine("Добавление телефона");
@@ -79,7 +86,11 @@ namespace ConsoleApp
             Phone newPhone = _logic.AddPhone(brand, model, year, color, price, memory, availability);
             Console.WriteLine($"Телефон добавлен");
             Console.WriteLine($"{newPhone}");
+            Console.ReadKey();
         }
+        /// <summary>
+        /// Показать все телефоны
+        /// </summary>
         static void ShowAllPhones()
         {
             Console.WriteLine("Список всех телефонов");
@@ -87,7 +98,11 @@ namespace ConsoleApp
             if (phones.Count == 0) { Console.WriteLine("Список телефонов пуст"); return; }
             foreach (Phone phone in phones) { Console.WriteLine(phone); }
             Console.WriteLine($"Всего: {phones.Count} телефонов");
+            Console.ReadKey();
         }
+        /// <summary>
+        /// Найти по ID
+        /// </summary>
         static void FindPhoneById()
         {
             Console.WriteLine("Поиск телефона по ID");
@@ -101,9 +116,26 @@ namespace ConsoleApp
                 Console.WriteLine(phone);
             }
             else { Console.WriteLine($"Телефон с ID {id} не найден"); }
+            Console.ReadKey();
         }
+        /// <summary>
+        /// Изменить телефон
+        /// </summary>
         static void UpdatePhone()
         {
+            Console.WriteLine("\nСписок всех телефонов:\n");
+            List<Phone> phones = _logic.AllPhone();
+            if (phones.Count == 0)
+            {
+                Console.WriteLine("Список телефонов пуст.");
+                return;
+            }
+            foreach (Phone phone in phones)
+            {
+                Console.WriteLine(phone);
+            }
+            Console.WriteLine();
+
             Console.WriteLine("Редактирование телефона");
             Console.Write("Введите ID телефона: ");
             int id;
@@ -162,11 +194,27 @@ namespace ConsoleApp
             bool success = _logic.UpdatePhone(id, brand, model, year, color, price, memory, availability);
 
             if (success) { Console.WriteLine("Телефон успешно обновлен"); }
+            Console.ReadKey();
         }
-
+        /// <summary>
+        /// Удалить телефон
+        /// </summary>
         static void DeletePhone()
         {
+            Console.WriteLine("\nСписок всех телефонов:\n");
+            List<Phone> phones = _logic.AllPhone();
+            if (phones.Count == 0)
+            {
+                Console.WriteLine("Список телефонов пуст.");
+                return;
+            }
+            foreach (Phone phone1 in phones)
+            {
+                Console.WriteLine(phone1);
+            }
+            Console.WriteLine();
             Console.WriteLine("Удаление телефона");
+
             Console.Write("Введите ID телефона: ");
             int id;
             if (int.TryParse(Console.ReadLine(), out id) == false) { Console.WriteLine("Введите целое число"); return; }
@@ -181,7 +229,11 @@ namespace ConsoleApp
                 if (success == true) { Console.WriteLine("Телефон успешно удален"); }
             }
             else { Console.WriteLine("Операция отменена"); }
+            Console.ReadKey();
         }
+        /// <summary>
+        /// Группировка по памяти
+        /// </summary>
         static void GroupByMemory()
         {
             Console.WriteLine("Группировка по памяти");
@@ -196,8 +248,11 @@ namespace ConsoleApp
                 }
                 Console.WriteLine();
             }
+            Console.ReadKey();
         }
-
+        /// <summary>
+        /// Топ дорогих
+        /// </summary>
         static void ShowTopExpensive()
         {
             Console.WriteLine("Топ самых дорогих телефонов");
@@ -213,6 +268,7 @@ namespace ConsoleApp
                 Console.WriteLine($"{place}. {phone.Brand} {phone.Model} - {phone.Price} руб.");
                 place++;
             }
+            Console.ReadKey();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace WinForms
     internal static class Program
     {
         /// <summary>
-        /// Главная точка входа для приложения.
+        /// Входная точка
         /// </summary>
         [STAThread]
         static void Main()

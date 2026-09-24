@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Model
 {
+    /// <summary>
+    /// Сущность телефона
+    /// </summary>
     public class Phone
     {
         public int Id { get; set; }

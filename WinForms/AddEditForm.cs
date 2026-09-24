@@ -24,7 +24,10 @@ namespace WinForms
         public CheckBox chkAvailability;
         public Button btnSave;
         public Button btnCancel;
-
+        /// <summary>
+        /// Редактирование добавление надпись
+        /// </summary>
+        /// <param name="phone">Телефон для редактирования</param>
         public AddEditForm(Phone phone = null)
         {
             BuildForm();
@@ -46,7 +49,9 @@ namespace WinForms
                 chkAvailability.Checked = true;
             }
         }
-
+        /// <summary>
+        /// Построение окна
+        /// </summary>
         public void BuildForm()
         {
             this.Size = new Size(400, 450);
@@ -106,7 +111,15 @@ namespace WinForms
             Controls.Add(btnSave);
             Controls.Add(btnCancel);
         }
-
+        /// <summary>
+        /// Кнопка создания
+        /// </summary>
+        /// <param name="label">Текст подписи слева от поля</param>
+        /// <param name="y">Координата Y</param>
+        /// <param name="leftMargin">Отступ от левого края</param>
+        /// <param name="labelWidth">Ширина подписи</param>
+        /// <param name="textBoxWidth">Ширина поля ввода</param>
+        /// <returns>Созданный элемент TextBox</returns>
         public TextBox CreateField(string label, ref int y, int leftMargin, int labelWidth, int textBoxWidth)
         {
             Label lbl = new Label();
@@ -131,7 +144,11 @@ namespace WinForms
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-
+        /// <summary>
+        /// Заполнение данных
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">параметры события</param>
         public void BtnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtBrand.Text))
