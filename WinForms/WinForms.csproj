@@ -84,6 +84,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
+      <Project>{0c65df39-ade6-4b2e-a523-2bb01d918358}</Project>
+      <Name>DataAccessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Logic\Logic.csproj">
       <Project>{a7605f98-3147-4d67-925b-5a5399231d01}</Project>
       <Name>Logic</Name>

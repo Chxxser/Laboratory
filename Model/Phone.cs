@@ -9,7 +9,7 @@ namespace Model
     /// <summary>
     /// Сущность телефона
     /// </summary>
-    public class Phone
+    public class Phone : IDomainObject
     {
         public int Id { get; set; }
         public string Brand { get; set; }
