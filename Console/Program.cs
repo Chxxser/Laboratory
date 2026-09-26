@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataAccessLayer;
 using Logic;
 using Model;
+using System;
+using System.Collections.Generic;
+using DataAccessLayer;
 
 namespace ConsoleApp
 {
     class Program
     {
-        public static Logic.Logic _logic = new Logic.Logic();
+        public static Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
         static void Main()
         {
             _logic.TestPhone();

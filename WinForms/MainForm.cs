@@ -1,15 +1,16 @@
-﻿using System;
+﻿using DataAccessLayer;
+using Logic;
+using Model;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Logic;
-using Model;
 
 namespace WinForms
 {
     public class MainForm : Form
     {
-        public Logic.Logic _logic = new Logic.Logic();
+        public Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
 
         public DataGridView gridPhones;
         public Button btnAdd;

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataAccessLayer;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,11 @@ namespace Logic
 {
     public class Logic
     {
-        public List<Phone> phones = new List<Phone>();
-        public int _Id = 1;
+        public IRepository<Phone> repository;
+        public Logic(IRepository<Phone> repo)
+        {
+            repository = repo;
+        }
         /// <summary>
         /// Добавление телефона
         /// </summary>
@@ -27,7 +31,6 @@ namespace Logic
         {
             var phone = new Phone()
             {
-                Id = _Id++,
                 Brand = brand,
                 Model = model,
                 Year = year,
@@ -36,26 +39,21 @@ namespace Logic
                 Memory = memory,
                 Availability = availability
             };
-            phones.Add(phone);
+            repository.Add(phone);
             return phone;
         }
         /// <summary>
         /// Показать все телефоны
         /// </summary>
         /// <returns>Список телефонов</returns>
-        public List<Phone> AllPhone() { return phones.ToList(); }
+        public List<Phone> AllPhone() { return repository.ReadAll(); }
         /// <summary>
         /// Найти телефон по ID
         /// </summary>
-        /// <param name="id">ID телефона</param>
         /// <returns>Найденный телефон</returns>
         public Phone PhoneId(int id)
         {
-            foreach (Phone i in phones)
-            {
-                if (i.Id == id) { return i; }
-            }
-            return null;
+            return repository.ReadById(id);
         }
         /// <summary>
         /// Редактирование телефона
@@ -71,7 +69,7 @@ namespace Logic
         /// <returns>Изменение телефона</returns>
         public bool UpdatePhone(int id, string brand, string model, int year, string color, decimal price, int memory, bool availability)
         {
-            Phone phone = PhoneId(id);
+            Phone phone = repository.ReadById(id);
             if (phone == null) return false;
             phone.Brand = brand;
             phone.Model = model;
@@ -80,6 +78,7 @@ namespace Logic
             phone.Price = price;
             phone.Memory = memory;
             phone.Availability = availability;
+            repository.Update(phone);
             return true;
         }
         /// <summary>
@@ -89,9 +88,10 @@ namespace Logic
         /// <returns>Удаление телефона</returns>
         public bool DeletePhone(int id)
         {
-            Phone phone = PhoneId(id);
+            Phone phone = repository.ReadById(id);
             if (phone == null) return false;
-            return phones.Remove(phone);
+            repository.Delete(phone);
+            return true;
         }
         /// <summary>
         /// Группировка по памяти
@@ -100,7 +100,7 @@ namespace Logic
         public Dictionary<int, List<Phone>> GroupMemory()
         {
             Dictionary<int, List<Phone>> result = new Dictionary<int, List<Phone>>();
-            foreach (Phone i in phones)
+            foreach (Phone i in AllPhone())
             {
                 if (result.ContainsKey(i.Memory) == false) { result[i.Memory] = new List<Phone>(); }
                 result[i.Memory].Add(i);
@@ -115,7 +115,7 @@ namespace Logic
         public List<Phone> ExpensivePhones(int count)
         {
             List<Phone> sorted = new List<Phone>();
-            foreach (Phone i in phones) { sorted.Add(i); }
+            foreach (Phone i in AllPhone()) { sorted.Add(i); }
             for (int i = 0; i < sorted.Count - 1; i++)
             {
                 for (int j = 0; j < sorted.Count - i - 1; j++)
