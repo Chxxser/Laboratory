@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class Logicз
+    public class Logic
     {
         public List<Phone> phones = new List<Phone>();
         public int _Id = 1;
