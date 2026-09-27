@@ -3,7 +3,8 @@ using Logic;
 using Model;
 using System;
 using System.Collections.Generic;
-using DataAccessLayer;
+
+
 
 namespace ConsoleApp
 {
@@ -12,6 +13,11 @@ namespace ConsoleApp
         public static Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
         static void Main()
         {
+            using (var context = new DBContext())
+            {
+                context.Database.EnsureCreated();   // ← ОДИН РАЗ создаём базу
+            }
+
             _logic.TestPhone();
             while (true)
             {

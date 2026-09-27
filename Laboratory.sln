@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laboratory", "Laboratory\Laboratory.csproj", "{655777DE-CFD6-43E0-85E6-0CA8ACC66877}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "WinForms\WinForms.csproj", "{2DD22E99-84EB-49D6-A5FD-1927F5BF46EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{599DD426-1B35-46DC-92B3-B94B894B049A}"
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{655777DE-CFD6-43E0-85E6-0CA8ACC66877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{655777DE-CFD6-43E0-85E6-0CA8ACC66877}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{655777DE-CFD6-43E0-85E6-0CA8ACC66877}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{655777DE-CFD6-43E0-85E6-0CA8ACC66877}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2DD22E99-84EB-49D6-A5FD-1927F5BF46EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2DD22E99-84EB-49D6-A5FD-1927F5BF46EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DD22E99-84EB-49D6-A5FD-1927F5BF46EE}.Release|Any CPU.ActiveCfg = Release|Any CPU

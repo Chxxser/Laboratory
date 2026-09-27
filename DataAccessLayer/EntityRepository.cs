@@ -11,6 +11,7 @@ namespace DataAccessLayer
         public EntityRepository()
         {
             _context = new DBContext();
+
         }
 
         public void Add(T entity)
