@@ -8,7 +8,7 @@ namespace DataAccessLayer
 {
     public class DapperRepository<T> : IRepository<T> where T : class, IDomainObject
     {
-        public string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\PhoneDB.mdf;Integrated Security=True";
+        public string _connectionString = ( @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\PhoneDB.mdf;Integrated Security=True"; )
 
         public void Add(T entity)
         {

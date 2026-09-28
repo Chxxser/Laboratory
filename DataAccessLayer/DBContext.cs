@@ -6,16 +6,10 @@ namespace DataAccessLayer
     public class DBContext : DbContext
     {
         public DbSet<Phone> Phones { get; set; }
-
-        public DBContext()
-        {
-
-        }
-
+        public DBContext() {}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-    @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=PhoneDB;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=PhoneDB;Integrated Security=True");
         }
     }
 }

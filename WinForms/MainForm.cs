@@ -27,7 +27,10 @@ namespace WinForms
         public MainForm()
         {
             BuildForm();
-            _logic.TestPhone();
+            if (_logic.AllPhone().Count == 0)
+            {
+                _logic.TestPhone();
+            }
         }
         /// <summary>
         /// Интерфейс

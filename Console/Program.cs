@@ -4,8 +4,6 @@ using Model;
 using System;
 using System.Collections.Generic;
 
-
-
 namespace ConsoleApp
 {
     class Program
@@ -15,10 +13,13 @@ namespace ConsoleApp
         {
             using (var context = new DBContext())
             {
-                context.Database.EnsureCreated();   // ← ОДИН РАЗ создаём базу
+                context.Database.EnsureCreated();
             }
 
-            _logic.TestPhone();
+            if (_logic.AllPhone().Count == 0)
+            {
+                _logic.TestPhone();
+            }
             while (true)
             {
                 ShowMenu();
