@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace WinForms
 {
+    /// <summary>
+    /// Главная форма приложения
+    /// </summary>
     public class MainForm : Form
     {
         public Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
@@ -23,7 +26,9 @@ namespace WinForms
         public Label lblTitle;
         public Label lblCount;
         public Label lblHint;
-
+        /// <summary>
+        /// Конструктор главной формы
+        /// </summary>
         public MainForm()
         {
             BuildForm();
@@ -33,7 +38,7 @@ namespace WinForms
             }
         }
         /// <summary>
-        /// Интерфейс
+        /// Построение интерфейса формы
         /// </summary>
         private void BuildForm()
         {
@@ -114,9 +119,9 @@ namespace WinForms
             Controls.Add(lblCount);
         }
         /// <summary>
-        /// Логика кнопок
+        /// Создание кнопки с заданными параметрами
         /// </summary>
-        /// <param name="text">Название</param>
+        /// <param name="text">Название кнопки</param>
         /// <param name="x">Координата x</param>
         /// <param name="y">Координата y</param>
         /// <returns>Созданная кнопка</returns>
@@ -136,7 +141,7 @@ namespace WinForms
             return btn;
         }
         /// <summary>
-        /// Все телефоны в таблице
+        /// Обновление списка телефонов в таблице
         /// </summary>
         public void RefreshList()
         {

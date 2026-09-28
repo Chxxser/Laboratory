@@ -5,6 +5,9 @@ using Model;
 
 namespace WinForms
 {
+    /// <summary>
+    /// Форма для добавления и редактирования телефона
+    /// </summary>
     public class AddEditForm : Form
     {
         public string Brand { get; private set; }
@@ -25,7 +28,7 @@ namespace WinForms
         public Button btnSave;
         public Button btnCancel;
         /// <summary>
-        /// Редактирование добавление надпись
+        /// Конструктор формы добавления/редактирования
         /// </summary>
         /// <param name="phone">Телефон для редактирования</param>
         public AddEditForm(Phone phone = null)
@@ -50,7 +53,7 @@ namespace WinForms
             }
         }
         /// <summary>
-        /// Построение окна
+        /// Построение интерфейса формы
         /// </summary>
         public void BuildForm()
         {
@@ -112,7 +115,7 @@ namespace WinForms
             Controls.Add(btnCancel);
         }
         /// <summary>
-        /// Кнопка создания
+        /// Создание поля ввода с подписью
         /// </summary>
         /// <param name="label">Текст подписи слева от поля</param>
         /// <param name="y">Координата Y</param>
@@ -138,14 +141,18 @@ namespace WinForms
             y = y + 35;
             return txt;
         }
-
+        /// <summary>
+        /// Обработчик кнопки "Отмена"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         public void BtnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
         /// <summary>
-        /// Заполнение данных
+        /// Обработчик кнопки "Сохранить". Проверяет данные и закрывает форму
         /// </summary>
         /// <param name="sender">Кнопка вызов события</param>
         /// <param name="e">параметры события</param>

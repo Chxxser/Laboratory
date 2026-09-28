@@ -9,9 +9,16 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
+    /// <summary>
+    /// Класс бизнес-логики для работы с телефонами
+    /// </summary>
     public class Logic
     {
         public IRepository<Phone> repository;
+        /// <summary>
+        /// Конструктор класса Logic
+        /// </summary>
+        /// <param name="repo">Репозиторий для работы с данными</param>
         public Logic(IRepository<Phone> repo)
         {
             repository = repo;

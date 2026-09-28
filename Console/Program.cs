@@ -6,16 +6,17 @@ using System.Collections.Generic;
 
 namespace ConsoleApp
 {
+    /// <summary>
+    /// Консольное приложение для управления телефонами
+    /// </summary>
     class Program
     {
         public static Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
+        /// <summary>
+        /// Точка входа в программу
+        /// </summary>
         static void Main()
         {
-            using (var context = new DBContext())
-            {
-                context.Database.EnsureCreated();
-            }
-
             if (_logic.AllPhone().Count == 0)
             {
                 _logic.TestPhone();

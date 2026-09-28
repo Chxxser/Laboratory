@@ -6,10 +6,17 @@ using Model;
 
 namespace DataAccessLayer
 {
+    /// <summary>
+    /// Репозиторий для работы с базой данных через Dapper
+    /// </summary>
+    /// <typeparam name="T">Тип сущности></typeparam>
     public class DapperRepository<T> : IRepository<T> where T : class, IDomainObject
     {
-        public string _connectionString = ( @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\PhoneDB.mdf;Integrated Security=True"; )
-
+        public string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\PhoneDB.mdf;Integrated Security=True";
+        /// <summary>
+        /// Добавить сущность в базу данных
+        /// </summary>
+        /// <param name="entity">Сущность для добавления</param>
         public void Add(T entity)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -19,7 +26,10 @@ namespace DataAccessLayer
                 connection.Execute(sql, entity);
             }
         }
-
+        /// <summary>
+        /// Удалить сущность из базы данных
+        /// </summary>
+        /// <param name="entity">Сущность для удаления</param>
         public void Delete(T entity)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -28,7 +38,10 @@ namespace DataAccessLayer
                 connection.Execute(sql, new { Id = entity.Id });
             }
         }
-
+        /// <summary>
+        /// Получить все сущности из базы данных
+        /// </summary>
+        /// <returns>Список всех сущностей</returns>
         public List<T> ReadAll()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -37,7 +50,11 @@ namespace DataAccessLayer
                 return connection.Query<T>(sql).ToList();
             }
         }
-
+        /// <summary>
+        /// Получить сущность по ID
+        /// </summary>
+        /// <param name="id">ID сущности</param>
+        /// <returns>Найденная сущность</returns>
         public T ReadById(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -46,7 +63,10 @@ namespace DataAccessLayer
                 return connection.QueryFirstOrDefault<T>(sql, new { Id = id });
             }
         }
-
+        /// <summary>
+        /// Обновить сущность в базе данных
+        /// </summary>
+        /// <param name="entity">Сущность для обновления</param>
         public void Update(T entity)
         {
             using (var connection = new SqlConnection(_connectionString))

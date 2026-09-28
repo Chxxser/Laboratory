@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Model
 {
     /// <summary>
-    /// Сущность телефона
+    /// Сущность "Телефон"
     /// </summary>
     public class Phone : IDomainObject
     {
@@ -19,6 +19,10 @@ namespace Model
         public int Memory { get; set; }
         public decimal Price { get; set; }
         public bool Availability { get; set; }
+        /// <summary>
+        /// Возвращает строковое представление телефона
+        /// </summary>
+        /// <returns>Строка с данными телефона</returns>
         public override string ToString()
         {
             string status;

@@ -6,10 +6,13 @@ using System.Windows.Forms;
 
 namespace WinForms
 {
+    /// <summary>
+    /// Точка входа для приложения WinForms
+    /// </summary>
     internal static class Program
     {
         /// <summary>
-        /// Входная точка
+        /// Главная точка входа для приложения
         /// </summary>
         [STAThread]
         static void Main()
