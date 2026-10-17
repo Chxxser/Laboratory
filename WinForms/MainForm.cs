@@ -13,7 +13,7 @@ namespace WinForms
     /// </summary>
     public class MainForm : Form
     {
-        public Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
+        public Logic.Logic _logic = new Logic.Logic(new DapperRepository());
 
         public DataGridView gridPhones;
         public Button btnAdd;

@@ -9,15 +9,14 @@ namespace DataAccessLayer
     /// <summary>
     /// Репозиторий для работы с базой данных через Dapper
     /// </summary>
-    /// <typeparam name="T">Тип сущности></typeparam>
-    public class DapperRepository<T> : IRepository<T> where T : class, IDomainObject
+    public class DapperRepository : IRepository<Phone> 
     {
-        public string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\PhoneDB.mdf;Integrated Security=True";
+        public string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=PhoneDB;Integrated Security=True";
         /// <summary>
         /// Добавить сущность в базу данных
         /// </summary>
         /// <param name="entity">Сущность для добавления</param>
-        public void Add(T entity)
+        public void Add(Phone entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -30,7 +29,7 @@ namespace DataAccessLayer
         /// Удалить сущность из базы данных
         /// </summary>
         /// <param name="entity">Сущность для удаления</param>
-        public void Delete(T entity)
+        public void Delete(Phone entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -42,12 +41,12 @@ namespace DataAccessLayer
         /// Получить все сущности из базы данных
         /// </summary>
         /// <returns>Список всех сущностей</returns>
-        public List<T> ReadAll()
+        public List<Phone> ReadAll()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string sql = "SELECT * FROM Phones";
-                return connection.Query<T>(sql).ToList();
+                return connection.Query<Phone>(sql).ToList();
             }
         }
         /// <summary>
@@ -55,19 +54,19 @@ namespace DataAccessLayer
         /// </summary>
         /// <param name="id">ID сущности</param>
         /// <returns>Найденная сущность</returns>
-        public T ReadById(int id)
+        public Phone ReadById(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string sql = "SELECT * FROM Phones WHERE Id = @Id";
-                return connection.QueryFirstOrDefault<T>(sql, new { Id = id });
+                return connection.QueryFirstOrDefault<Phone>(sql, new { Id = id });
             }
         }
         /// <summary>
         /// Обновить сущность в базе данных
         /// </summary>
         /// <param name="entity">Сущность для обновления</param>
-        public void Update(T entity)
+        public void Update(Phone entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

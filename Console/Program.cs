@@ -11,7 +11,7 @@ namespace ConsoleApp
     /// </summary>
     class Program
     {
-        public static Logic.Logic _logic = new Logic.Logic( new EntityRepository<Phone>() );
+        public static Logic.Logic _logic = new Logic.Logic(new DapperRepository());
         /// <summary>
         /// Точка входа в программу
         /// </summary>

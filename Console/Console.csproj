@@ -19,4 +19,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Ninject" Version="3.3.6" />
+    <PackageReference Include="Ninject.MVC5" Version="3.3.0" />
+  </ItemGroup>
+
 </Project>
