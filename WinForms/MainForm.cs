@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Ninject;
 
 namespace WinForms
 {
@@ -13,7 +14,8 @@ namespace WinForms
     /// </summary>
     public class MainForm : Form
     {
-        public Logic.Logic _logic = new Logic.Logic(new DapperRepository());
+        public IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
+        public Logic.Logic _logic;
 
         public DataGridView gridPhones;
         public Button btnAdd;
@@ -32,6 +34,7 @@ namespace WinForms
         public MainForm()
         {
             BuildForm();
+            _logic = ninjectKernel.Get<Logic.Logic>();
             if (_logic.AllPhone().Count == 0)
             {
                 _logic.TestPhone();

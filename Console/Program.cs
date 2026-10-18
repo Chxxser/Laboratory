@@ -3,6 +3,7 @@ using Logic;
 using Model;
 using System;
 using System.Collections.Generic;
+using Ninject;
 
 namespace ConsoleApp
 {
@@ -11,7 +12,8 @@ namespace ConsoleApp
     /// </summary>
     class Program
     {
-        public static Logic.Logic _logic = new Logic.Logic(new DapperRepository());
+        public static IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
+        public static Logic.Logic _logic = ninjectKernel.Get<Logic.Logic>();
         /// <summary>
         /// Точка входа в программу
         /// </summary>
