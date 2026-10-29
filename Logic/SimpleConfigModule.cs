@@ -21,6 +21,9 @@ namespace Logic
         {
             // Связываем интерфейс IRepository<Phone> с классом EntityRepository<Phone>
             Bind<IRepository<Phone>>().To<DapperRepository<Phone>>().InSingletonScope();
+            // hi
         }
+
+
     }
 }
