@@ -20,7 +20,10 @@ namespace Logic
         public override void Load()
         {
             // Связываем интерфейс IRepository<Phone> с классом EntityRepository<Phone>
-            Bind<IRepository<Phone>>().To<EntityRepository<Phone>>().InSingletonScope();
+            Bind<IRepository<Phone>>().To<DapperRepository<Phone>>().InSingletonScope();
+            // hi
         }
+
+
     }
 }

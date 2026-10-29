@@ -9,27 +9,35 @@ namespace DataAccessLayer
     /// <summary>
     /// Репозиторий для работы с базой данных через Dapper
     /// </summary>
-    public class DapperRepository : IRepository<Phone> 
+    public class DapperRepository<T> : IRepository<T> where T : class, IDomainObject
     {
         public string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=PhoneDB;Integrated Security=True";
         /// <summary>
         /// Добавить сущность в базу данных
         /// </summary>
         /// <param name="entity">Сущность для добавления</param>
-        public void Add(Phone entity)
+        public void Add(T entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = "INSERT INTO Phones (Brand, Model, Year, Color, Memory, Price, Availability) " +
-                             "VALUES (@Brand, @Model, @Year, @Color, @Memory, @Price, @Availability)";
-                connection.Execute(sql, entity);
+                
+                string sql = @"
+            INSERT INTO Phones (Brand, Model, Year, Color, Memory, Price, Availability) 
+            VALUES (@Brand, @Model, @Year, @Color, @Memory, @Price, @Availability);
+            SELECT CAST(SCOPE_IDENTITY() as int);";
+
+                
+                var newId = connection.ExecuteScalar<int>(sql, entity);
+
+                
+                entity.Id = newId;
             }
         }
         /// <summary>
         /// Удалить сущность из базы данных
         /// </summary>
         /// <param name="entity">Сущность для удаления</param>
-        public void Delete(Phone entity)
+        public void Delete(T entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -41,12 +49,12 @@ namespace DataAccessLayer
         /// Получить все сущности из базы данных
         /// </summary>
         /// <returns>Список всех сущностей</returns>
-        public List<Phone> ReadAll()
+        public List<T> ReadAll()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string sql = "SELECT * FROM Phones";
-                return connection.Query<Phone>(sql).ToList();
+                return connection.Query<T>(sql).ToList();
             }
         }
         /// <summary>
@@ -54,19 +62,19 @@ namespace DataAccessLayer
         /// </summary>
         /// <param name="id">ID сущности</param>
         /// <returns>Найденная сущность</returns>
-        public Phone ReadById(int id)
+        public T ReadById(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string sql = "SELECT * FROM Phones WHERE Id = @Id";
-                return connection.QueryFirstOrDefault<Phone>(sql, new { Id = id });
+                return connection.QueryFirstOrDefault<T>(sql, new { Id = id });
             }
         }
         /// <summary>
         /// Обновить сущность в базе данных
         /// </summary>
         /// <param name="entity">Сущность для обновления</param>
-        public void Update(Phone entity)
+        public void Update(T entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
