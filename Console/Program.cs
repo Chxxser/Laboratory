@@ -13,7 +13,7 @@ namespace ConsoleApp
     class Program
     {
         public static IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
-        public static Logic.Logic _logic = ninjectKernel.Get<Logic.Logic>();
+        public static ILogic _logic = ninjectKernel.Get<ILogic>();
         /// <summary>
         /// Точка входа в программу
         /// </summary>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject.Modules;
+﻿using Ninject.Modules;
 using DataAccessLayer;
 using Model;
 
@@ -19,10 +14,14 @@ namespace Logic
         /// </summary>
         public override void Load()
         {
-            // Связываем интерфейс IRepository<Phone> с классом EntityRepository<Phone>
-            Bind<IRepository<Phone>>().To<DapperRepository<Phone>>().InSingletonScope();
+            Bind<IRepository<Phone>>()
+                .ToMethod(context => new DapperRepository<Phone>("Phones"))
+                .InSingletonScope();
+
+            Bind<IPhoneService>().To<PhoneService>().InSingletonScope();
+            Bind<IAnalyticsService>().To<AnalyticsService>().InSingletonScope();
+            Bind<DataSeeder>().To<DataSeeder>().InSingletonScope();
+            Bind<ILogic>().To<Logic>().InSingletonScope();
         }
-
-
     }
 }

@@ -15,7 +15,7 @@ namespace WinForms
     public class MainForm : Form
     {
         public IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
-        public Logic.Logic _logic;
+        public ILogic _logic;
 
         public DataGridView gridPhones;
         public Button btnAdd;
