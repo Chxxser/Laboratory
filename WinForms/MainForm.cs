@@ -1,22 +1,17 @@
-﻿using DataAccessLayer;
-using Logic;
-using Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Ninject;
+using Shared;
+using Model;
 
 namespace WinForms
 {
     /// <summary>
-    /// Главная форма приложения
+    /// Главная форма приложения (реализация View)
     /// </summary>
-    public class MainForm : Form
+    public class MainForm : Form, Shared.IView
     {
-        public IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
-        public ILogic _logic;
-
         public DataGridView gridPhones;
         public Button btnAdd;
         public Button btnToggleView;
@@ -28,18 +23,23 @@ namespace WinForms
         public Label lblTitle;
         public Label lblCount;
         public Label lblHint;
+
+        public event Action AddPhoneClicked;
+        public event Action<int> DeletePhoneClicked;
+        public event Action RefreshClicked;
+        public event Action<int> FindPhoneClicked;
+        public event Action<int> EditPhoneClicked;
+        public event Action GroupMemoryClicked;
+        public event Action<int> TopExpensiveClicked;
+
         /// <summary>
         /// Конструктор главной формы
         /// </summary>
         public MainForm()
         {
             BuildForm();
-            _logic = ninjectKernel.Get<Logic.Logic>();
-            if (_logic.AllPhone().Count == 0)
-            {
-                _logic.TestPhone();
-            }
         }
+
         /// <summary>
         /// Построение интерфейса формы
         /// </summary>
@@ -81,6 +81,7 @@ namespace WinForms
             lblHint.TextAlign = ContentAlignment.MiddleCenter;
             lblHint.ForeColor = Color.Gray;
 
+            
             btnAdd = CreateButton("Добавить", 820, 60);
             btnAdd.Click += BtnAdd_Click;
 
@@ -121,14 +122,11 @@ namespace WinForms
             Controls.Add(btnTopExpensive);
             Controls.Add(lblCount);
         }
+
         /// <summary>
         /// Создание кнопки с заданными параметрами
         /// </summary>
-        /// <param name="text">Название кнопки</param>
-        /// <param name="x">Координата x</param>
-        /// <param name="y">Координата y</param>
-        /// <returns>Созданная кнопка</returns>
-        public Button CreateButton(string text, int x, int y)
+        private Button CreateButton(string text, int x, int y)
         {
             Button btn = new Button();
             btn.Text = text;
@@ -143,13 +141,12 @@ namespace WinForms
             btn.FlatAppearance.BorderColor = Color.Black;
             return btn;
         }
-        /// <summary>
-        /// Обновление списка телефонов в таблице
-        /// </summary>
-        public void RefreshList()
-        {
-            List<Phone> phones = _logic.AllPhone();
 
+        /// <summary>
+        /// Отрисовать список телефонов в таблице
+        /// </summary>
+        public void ShowPhones(IEnumerable<object> phones)
+        {
             gridPhones.Rows.Clear();
             gridPhones.Columns.Clear();
 
@@ -162,12 +159,9 @@ namespace WinForms
             gridPhones.Columns.Add("Price", "Цена (руб)");
             gridPhones.Columns.Add("Availability", "Наличие");
 
-            foreach (Phone phone in phones)
+            foreach (var item in phones)
             {
-                string status;
-                if (phone.Availability == true) { status = "В наличии"; }
-                else { status = "Нет в наличии"; }
-
+                var phone = (Phone)item;
                 gridPhones.Rows.Add(
                     phone.Id,
                     phone.Brand,
@@ -176,18 +170,56 @@ namespace WinForms
                     phone.Color,
                     phone.Memory,
                     phone.Price,
-                    status
+                    phone.Availability ? "В наличии" : "Нет в наличии"
                 );
             }
-
-            lblCount.Text = "Всего: " + phones.Count + " телефонов";
+            lblCount.Text = "Всего: " + gridPhones.Rows.Count + " телефонов";
         }
+
         /// <summary>
-        /// Показ и скрытие всех телефонов
+        /// Показать сообщение пользователю
         /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        public void BtnToggleView_Click(object sender, EventArgs e)
+        public void ShowMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
+
+        private void BtnAdd_Click(object sender, EventArgs e) => AddPhoneClicked?.Invoke();
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            if (gridPhones.SelectedRows.Count > 0)
+            {
+                int id = Convert.ToInt32(gridPhones.SelectedRows[0].Cells["Id"].Value);
+                DeletePhoneClicked?.Invoke(id);
+            }
+        }
+
+        private void BtnFindById_Click(object sender, EventArgs e)
+        {
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Введите ID телефона:", "Поиск по ID", "");
+            if (int.TryParse(input, out int id)) FindPhoneClicked?.Invoke(id);
+        }
+
+        private void BtnEdit_Click(object sender, EventArgs e)
+        {
+            if (gridPhones.SelectedRows.Count > 0)
+            {
+                int id = Convert.ToInt32(gridPhones.SelectedRows[0].Cells["Id"].Value);
+                EditPhoneClicked?.Invoke(id);
+            }
+        }
+
+        private void BtnGroupMemory_Click(object sender, EventArgs e) => GroupMemoryClicked?.Invoke();
+
+        private void BtnTopExpensive_Click(object sender, EventArgs e)
+        {
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Сколько показать?", "Топ дорогих", "3");
+            if (int.TryParse(input, out int count)) TopExpensiveClicked?.Invoke(count);
+        }
+
+
+        private void BtnToggleView_Click(object sender, EventArgs e)
         {
             if (gridPhones.Visible == false)
             {
@@ -195,7 +227,7 @@ namespace WinForms
                 lblTitle.Visible = true;
                 lblHint.Visible = false;
                 btnToggleView.Text = "Скрыть";
-                RefreshList();
+                RefreshClicked?.Invoke();
             }
             else
             {
@@ -205,203 +237,6 @@ namespace WinForms
                 btnToggleView.Text = "Показать все";
                 lblCount.Text = "";
             }
-        }
-        /// <summary>
-        /// Меню добавления
-        /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        public void BtnAdd_Click(object sender, EventArgs e)
-        {
-            AddEditForm form = new AddEditForm();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                _logic.AddPhone(form.Brand, form.Model, form.Year, form.PhoneColor,
-                                form.Price, form.Memory, form.Availability);
-                MessageBox.Show("Телефон добавлен", "Успех");
-
-                if (gridPhones.Visible == true)
-                {
-                    RefreshList();
-                }
-            }
-        }
-        /// <summary>
-        /// Меню поиска по ID
-        /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        public void BtnFindById_Click(object sender, EventArgs e)
-        {
-            string input = Microsoft.VisualBasic.Interaction.InputBox(
-                "Введите ID телефона:", "Поиск по ID", "");
-
-            if (string.IsNullOrWhiteSpace(input)) { return; }
-
-            int id;
-            if (int.TryParse(input, out id) == false)
-            {
-                MessageBox.Show("ID должен быть числом", "Ошибка");
-                return;
-            }
-
-            if (id <= 0)
-            {
-                MessageBox.Show("ID должен быть больше нуля", "Ошибка");
-                return;
-            }
-
-            Phone phone = _logic.PhoneId(id);
-
-            if (phone == null)
-            {
-                MessageBox.Show("Телефон с ID " + id + " не найден", "Результат");
-                return;
-            }
-
-            MessageBox.Show(phone.ToString(), "Найден телефон ID " + id);
-        }
-        /// <summary>
-        /// Меню обновления
-        /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        public void BtnEdit_Click(object sender, EventArgs e)
-        {
-            if (gridPhones.Visible == false)
-            {
-                MessageBox.Show("Сначала нажмите «Показать все»", "Внимание");
-                return;
-            }
-
-            if (gridPhones.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Выберите телефон из списка", "Внимание");
-                return;
-            }
-
-            int id = Convert.ToInt32(gridPhones.SelectedRows[0].Cells["Id"].Value);
-            Phone selected = _logic.PhoneId(id);
-
-            if (selected == null)
-            {
-                MessageBox.Show("Телефон не найден", "Ошибка");
-                return;
-            }
-
-            AddEditForm form = new AddEditForm(selected);
-
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                _logic.UpdatePhone(selected.Id, form.Brand, form.Model, form.Year,
-                                   form.PhoneColor, form.Price, form.Memory, form.Availability);
-                RefreshList();
-                MessageBox.Show("Телефон обновлён", "Успех");
-            }
-        }
-        /// <summary>
-        /// Меню удаления
-        /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        public void BtnDelete_Click(object sender, EventArgs e)
-        {
-            if (gridPhones.Visible == false)
-            {
-                MessageBox.Show("Сначала нажмите «Показать все»", "Внимание");
-                return;
-            }
-
-            if (gridPhones.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Выберите телефон из списка", "Внимание");
-                return;
-            }
-
-            int id = Convert.ToInt32(gridPhones.SelectedRows[0].Cells["Id"].Value);
-            Phone selected = _logic.PhoneId(id);
-
-            if (selected == null)
-            {
-                MessageBox.Show("Телефон не найден", "Ошибка");
-                return;
-            }
-
-            DialogResult result = MessageBox.Show(
-                "Удалить " + selected.Brand + " " + selected.Model + "?",
-                "Подтверждение", MessageBoxButtons.YesNo);
-
-            if (result == DialogResult.Yes)
-            {
-                _logic.DeletePhone(selected.Id);
-                RefreshList();
-                MessageBox.Show("Телефон удалён", "Успех");
-            }
-        }
-        /// <summary>
-        /// Меню группировки
-        /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        public void BtnGroupMemory_Click(object sender, EventArgs e)
-        {
-            Dictionary<int, List<Phone>> groups = _logic.GroupMemory();
-
-            if (groups.Count == 0)
-            {
-                MessageBox.Show("Нет телефонов");
-                return;
-            }
-
-            string message = "Группировка по памяти:\n\n";
-            foreach (var group in groups)
-            {
-                message = message + group.Key + " ГБ:\n";
-                foreach (Phone p in group.Value)
-                {
-                    message = message + "  - " + p.Brand + " " + p.Model + "\n";
-                }
-                message = message + "\n";
-            }
-
-            MessageBox.Show(message, "Группировка");
-        }
-        /// <summary>
-        /// Меню топ дорогих
-        /// </summary>
-        /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
-        private void BtnTopExpensive_Click(object sender, EventArgs e)
-        {
-            string input = Microsoft.VisualBasic.Interaction.InputBox(
-                "Сколько показать?", "Топ дорогих", "3");
-
-            if (string.IsNullOrWhiteSpace(input)) return;
-
-            int count;
-            if (int.TryParse(input, out count) == false || count <= 0)
-            {
-                MessageBox.Show("Введите корректное число");
-                return;
-            }
-
-            List<Phone> top = _logic.ExpensivePhones(count);
-
-            if (top.Count == 0)
-            {
-                MessageBox.Show("Нет телефонов");
-                return;
-            }
-
-            string message = "Топ-" + top.Count + ":\n\n";
-            int place = 1;
-            foreach (Phone p in top)
-            {
-                message = message + place + ". " + p.Brand + " " + p.Model + " - " + p.Price + " руб.\n";
-                place++;
-            }
-
-            MessageBox.Show(message, "Топ дорогих");
         }
     }
 }
