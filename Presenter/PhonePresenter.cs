@@ -31,6 +31,7 @@ namespace Presenter
             _view.EditPhoneClicked += OnEditPhone;
             _view.GroupMemoryClicked += OnGroupMemory;
             _view.TopExpensiveClicked += OnTopExpensive;
+            _logic.DataChanged += OnRefresh;
         }
 
         /// <summary>
@@ -64,7 +65,18 @@ namespace Presenter
         private void OnRefresh()
         {
             var phones = _logic.AllPhone();
-            _view.ShowPhones(phones.Cast<object>().ToList());
+            var dtos = phones.Select(p => new PhoneDto()
+            {
+                Id = p.Id,
+                Brand = p.Brand,
+                Model = p.Model,
+                Year = p.Year,
+                Color = p.Color,
+                Memory = p.Memory,
+                Price = p.Price,
+                Availability = p.Availability
+            }).ToList();
+            _view.ShowPhones(dtos);
         }
 
         /// <summary>

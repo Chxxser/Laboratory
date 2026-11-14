@@ -26,6 +26,11 @@ namespace Logic
         }
 
         /// <summary>
+        /// Событие при изменении данных (добавление, удаление, редактирование)
+        /// </summary>
+        public event Action DataChanged;
+
+        /// <summary>
         /// Добавить новый телефон
         /// </summary>
         /// <param name="brand">Бренд телефона</param>

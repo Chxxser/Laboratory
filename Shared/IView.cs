@@ -47,7 +47,7 @@ namespace Shared
         /// Отрисовать список телефонов в таблице
         /// </summary>
         /// <param name="phones">Список телефонов для отображения</param>
-        void ShowPhones(IEnumerable<object> phones);
+        void ShowPhones(IEnumerable<PhoneDto> phones);
 
         /// <summary>
         /// Показать всплывающее сообщение пользователю

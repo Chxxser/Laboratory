@@ -12,9 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Logic\Logic.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
-    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
-    <ProjectReference Include="..\WinForms\WinForms.csproj" />
   </ItemGroup>
 
   <ItemGroup>

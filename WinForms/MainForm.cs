@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Shared;
-using Model;
 
 namespace WinForms
 {
@@ -219,7 +218,7 @@ namespace WinForms
         /// Отрисовка списка телефонов в таблице
         /// </summary>
         /// <param name="phones">Список телефонов для отображения</param>
-        public void ShowPhones(IEnumerable<object> phones)
+        public void ShowPhones(IEnumerable<PhoneDto> phones)
         {
             gridPhones.Rows.Clear();
             gridPhones.Columns.Clear();
@@ -233,9 +232,8 @@ namespace WinForms
             gridPhones.Columns.Add("Price", "Цена (руб)");
             gridPhones.Columns.Add("Availability", "Наличие");
 
-            foreach (var item in phones)
+            foreach (var phone in phones)
             {
-                var phone = (Phone)item;
                 gridPhones.Rows.Add(
                     phone.Id,
                     phone.Brand,

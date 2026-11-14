@@ -9,6 +9,11 @@ namespace Logic
     public interface ILogic
     {
         /// <summary>
+        /// Событие при изменении данных (добавление, удаление, редактирование)
+        /// </summary>
+        event Action DataChanged;
+
+        /// <summary>
         /// Добавить новый телефон
         /// </summary>
         /// <param name="brand">Бренд телефона</param>

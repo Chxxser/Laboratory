@@ -2,7 +2,7 @@
 using Ninject;
 using System;
 using System.Windows.Forms;
-using WinForms;
+//using WinForms;
 
 //namespace ConsoleApp
 //{
