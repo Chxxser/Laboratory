@@ -12,11 +12,18 @@ namespace Presenter
     {
         private readonly ILogic _logic;
 
+        /// <summary>
+        /// Конструктор консольного презентера
+        /// </summary>
+        /// <param name="logic">Бизнес-логика приложения</param>
         public ConsolePresenter(ILogic logic)
         {
             _logic = logic;
         }
 
+        /// <summary>
+        /// Запуск консольного меню
+        /// </summary>
         public void Run()
         {
             if (_logic.AllPhone().Count == 0) _logic.TestPhone();
@@ -46,85 +53,252 @@ namespace Presenter
                     case "6": GroupByMemory(); break;
                     case "7": ShowTopExpensive(); break;
                     case "0": return;
-                    default: Console.WriteLine("Неверный выбор"); Console.ReadKey(); break;
+                    default:
+                        Console.WriteLine("Неверный выбор. Нажмите любую клавишу...");
+                        Console.ReadKey();
+                        break;
                 }
             }
         }
 
-        // Твои старые методы из консоли (скопированы сюда)
+        /// <summary>
+        /// Вспомогательный метод для вывода списка телефонов без ожидания клавиши
+        /// </summary>
+        private void PrintPhones()
+        {
+            var phones = _logic.AllPhone();
+            if (phones.Count == 0)
+            {
+                Console.WriteLine("Список пуст.");
+                return;
+            }
+            foreach (var p in phones) Console.WriteLine(p);
+            Console.WriteLine($"Всего: {phones.Count}");
+        }
+
+        /// <summary>
+        /// Добавление нового телефона с проверкой на пустые поля и корректность ввода
+        /// </summary>
         private void AddPhone()
         {
+            Console.Clear();
             Console.WriteLine("Добавление телефона");
-            Console.Write("Бренд: "); string brand = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(brand)) { Console.WriteLine("Пустой бренд"); Console.ReadKey(); return; }
-            Console.Write("Модель: "); string model = Console.ReadLine();
-            Console.Write("Год выпуска: "); int year = int.Parse(Console.ReadLine());
-            Console.Write("Цвет: "); string color = Console.ReadLine();
-            Console.Write("Цена (руб): "); decimal price = decimal.Parse(Console.ReadLine());
-            Console.Write("Память (ГБ): "); int memory = int.Parse(Console.ReadLine());
-            Console.Write("В наличии (да/нет): "); bool avail = Console.ReadLine().ToLower() == "да";
+
+            Console.Write("Бренд: ");
+            string brand = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(brand)) { ReturnToMenu(); return; }
+
+            Console.Write("Модель: ");
+            string model = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(model)) { ReturnToMenu(); return; }
+
+            Console.Write("Год выпуска: ");
+            if (!int.TryParse(Console.ReadLine(), out int year) || year < 2000 || year > DateTime.Now.Year + 1)
+            {
+                Console.WriteLine("Некорректный год.");
+                ReturnToMenu();
+                return;
+            }
+
+            Console.Write("Цвет: ");
+            string color = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(color)) { ReturnToMenu(); return; }
+
+            Console.Write("Цена (руб): ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+            {
+                Console.WriteLine("Некорректная цена.");
+                ReturnToMenu();
+                return;
+            }
+
+            Console.Write("Память (ГБ): ");
+            if (!int.TryParse(Console.ReadLine(), out int memory) || memory <= 0)
+            {
+                Console.WriteLine("Некорректная память.");
+                ReturnToMenu();
+                return;
+            }
+
+            Console.Write("В наличии (да/нет): ");
+            bool avail = Console.ReadLine()?.ToLower() == "да";
 
             _logic.AddPhone(brand, model, year, color, price, memory, avail);
             Console.WriteLine("Телефон добавлен!");
-            Console.ReadKey();
+            ReturnToMenu();
         }
 
+        /// <summary>
+        /// Отображение списка всех телефонов
+        /// </summary>
         private void ShowAllPhones()
         {
-            var phones = _logic.AllPhone();
-            if (phones.Count == 0) { Console.WriteLine("Список пуст"); Console.ReadKey(); return; }
-            foreach (var p in phones) Console.WriteLine(p);
-            Console.WriteLine($"Всего: {phones.Count}");
-            Console.ReadKey();
+            Console.Clear();
+            PrintPhones();
+            ReturnToMenu();
         }
 
+        /// <summary>
+        /// Поиск телефона по ID с проверкой на пустой ввод
+        /// </summary>
         private void FindPhoneById()
         {
-            Console.Write("ID: "); int id = int.Parse(Console.ReadLine());
+            Console.Clear();
+            Console.Write("ID: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) { ReturnToMenu(); return; }
+
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("ID должен быть числом.");
+                ReturnToMenu();
+                return;
+            }
+
             var phone = _logic.PhoneId(id);
-            if (phone != null) Console.WriteLine(phone); else Console.WriteLine("Не найден");
-            Console.ReadKey();
+            if (phone != null) Console.WriteLine(phone);
+            else Console.WriteLine("Не найден.");
+            ReturnToMenu();
         }
 
+        /// <summary>
+        /// Редактирование телефона по ID с проверкой на пустой ввод
+        /// </summary>
         private void UpdatePhone()
         {
-            ShowAllPhones();
-            Console.Write("ID для редактирования: "); int id = int.Parse(Console.ReadLine());
+            Console.Clear();
+            PrintPhones();
+
+            Console.Write("\nID для редактирования: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) { ReturnToMenu(); return; }
+
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("ID должен быть числом.");
+                ReturnToMenu();
+                return;
+            }
+
             var existing = _logic.PhoneId(id);
-            if (existing == null) { Console.WriteLine("Не найден"); Console.ReadKey(); return; }
+            if (existing == null)
+            {
+                Console.WriteLine("Не найден.");
+                ReturnToMenu();
+                return;
+            }
 
-            Console.Write($"Бренд ({existing.Brand}): "); string brand = Console.ReadLine();
+            Console.Write($"Бренд ({existing.Brand}): ");
+            string brand = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(brand)) brand = existing.Brand;
-            // ... (аналогично другие поля, но для краткости опустим, сделай по аналогии со старым кодом)
 
-            Console.WriteLine("Обновлено!"); // Тут нужно вызвать _logic.UpdatePhone(...)
-            Console.ReadKey();
+            Console.Write($"Модель ({existing.Model}): ");
+            string model = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(model)) model = existing.Model;
+
+            Console.Write($"Год выпуска ({existing.Year}): ");
+            string yearStr = Console.ReadLine();
+            int year = existing.Year;
+            if (!string.IsNullOrWhiteSpace(yearStr) && !int.TryParse(yearStr, out year)) year = existing.Year;
+
+            Console.Write($"Цвет ({existing.Color}): ");
+            string color = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(color)) color = existing.Color;
+
+            Console.Write($"Цена ({existing.Price}): ");
+            string priceStr = Console.ReadLine();
+            decimal price = existing.Price;
+            if (!string.IsNullOrWhiteSpace(priceStr) && !decimal.TryParse(priceStr, out price)) price = existing.Price;
+
+            Console.Write($"Память ({existing.Memory}): ");
+            string memoryStr = Console.ReadLine();
+            int memory = existing.Memory;
+            if (!string.IsNullOrWhiteSpace(memoryStr) && !int.TryParse(memoryStr, out memory)) memory = existing.Memory;
+
+            Console.Write($"В наличии ({(existing.Availability ? "да" : "нет")}): ");
+            string availStr = Console.ReadLine();
+            bool availability = string.IsNullOrWhiteSpace(availStr) ? existing.Availability : availStr.ToLower() == "да";
+
+            _logic.UpdatePhone(id, brand, model, year, color, price, memory, availability);
+            Console.WriteLine("Телефон обновлен!");
+            ReturnToMenu();
         }
 
+        /// <summary>
+        /// Удаление телефона по ID с выводом списка и проверкой на пустой ввод
+        /// </summary>
         private void DeletePhone()
         {
-            Console.Write("ID для удаления: "); int id = int.Parse(Console.ReadLine());
+            Console.Clear();
+            PrintPhones();
+
+            Console.Write("\nID для удаления: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) { ReturnToMenu(); return; }
+
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine("ID должен быть числом.");
+                ReturnToMenu();
+                return;
+            }
+
             _logic.DeletePhone(id);
             Console.WriteLine("Удалено!");
-            Console.ReadKey();
+            ReturnToMenu();
         }
 
+        /// <summary>
+        /// Группировка телефонов по объему памяти
+        /// </summary>
         private void GroupByMemory()
         {
+            Console.Clear();
             var groups = _logic.GroupMemory();
+            if (groups.Count == 0)
+            {
+                Console.WriteLine("Нет телефонов.");
+                ReturnToMenu();
+                return;
+            }
+
             foreach (var g in groups)
             {
                 Console.WriteLine($"{g.Key} ГБ:");
                 foreach (var p in g.Value) Console.WriteLine($"  - {p.Brand} {p.Model}");
             }
-            Console.ReadKey();
+            ReturnToMenu();
         }
 
+        /// <summary>
+        /// Отображение топ-N самых дорогих телефонов
+        /// </summary>
         private void ShowTopExpensive()
         {
-            Console.Write("Сколько показать? "); int count = int.Parse(Console.ReadLine());
+            Console.Clear();
+            Console.Write("Сколько показать? ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) { ReturnToMenu(); return; }
+
+            if (!int.TryParse(input, out int count) || count <= 0)
+            {
+                Console.WriteLine("Некорректное число.");
+                ReturnToMenu();
+                return;
+            }
+
             var top = _logic.ExpensivePhones(count);
-            for (int i = 0; i < top.Count; i++) Console.WriteLine($"{i + 1}. {top[i].Brand} - {top[i].Price}");
+            for (int i = 0; i < top.Count; i++)
+                Console.WriteLine($"{i + 1}. {top[i].Brand} {top[i].Model} - {top[i].Price} руб.");
+            ReturnToMenu();
+        }
+
+        /// <summary>
+        /// Ожидание нажатия клавиши для возврата в главное меню
+        /// </summary>
+        private void ReturnToMenu()
+        {
+            Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
             Console.ReadKey();
         }
     }

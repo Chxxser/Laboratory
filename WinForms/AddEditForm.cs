@@ -10,23 +10,86 @@ namespace WinForms
     /// </summary>
     public class AddEditForm : Form
     {
+        /// <summary>
+        /// Бренд телефона
+        /// </summary>
         public string Brand { get; private set; }
+
+        /// <summary>
+        /// Модель телефона
+        /// </summary>
         public string Model { get; private set; }
+
+        /// <summary>
+        /// Год выпуска
+        /// </summary>
         public int Year { get; private set; }
+
+        /// <summary>
+        /// Цвет телефона
+        /// </summary>
         public string PhoneColor { get; private set; }
+
+        /// <summary>
+        /// Цена в рублях
+        /// </summary>
         public decimal Price { get; private set; }
+
+        /// <summary>
+        /// Объем памяти в ГБ
+        /// </summary>
         public int Memory { get; private set; }
+
+        /// <summary>
+        /// Наличие на складе
+        /// </summary>
         public bool Availability { get; private set; }
 
+        /// <summary>
+        /// Поле ввода бренда
+        /// </summary>
         public TextBox txtBrand;
+
+        /// <summary>
+        /// Поле ввода модели
+        /// </summary>
         public TextBox txtModel;
+
+        /// <summary>
+        /// Поле ввода года
+        /// </summary>
         public TextBox txtYear;
+
+        /// <summary>
+        /// Поле ввода цвета
+        /// </summary>
         public TextBox txtColor;
+
+        /// <summary>
+        /// Поле ввода цены
+        /// </summary>
         public TextBox txtPrice;
+
+        /// <summary>
+        /// Поле ввода памяти
+        /// </summary>
         public TextBox txtMemory;
+
+        /// <summary>
+        /// Флажок наличия
+        /// </summary>
         public CheckBox chkAvailability;
+
+        /// <summary>
+        /// Кнопка сохранения
+        /// </summary>
         public Button btnSave;
+
+        /// <summary>
+        /// Кнопка отмены
+        /// </summary>
         public Button btnCancel;
+
         /// <summary>
         /// Конструктор формы добавления/редактирования
         /// </summary>
@@ -34,7 +97,6 @@ namespace WinForms
         public AddEditForm(Phone phone = null)
         {
             BuildForm();
-
             if (phone != null)
             {
                 this.Text = "Редактирование телефона";
@@ -52,6 +114,7 @@ namespace WinForms
                 chkAvailability.Checked = true;
             }
         }
+
         /// <summary>
         /// Построение интерфейса формы
         /// </summary>
@@ -62,7 +125,7 @@ namespace WinForms
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.BackColor = Color.White;  
+            this.BackColor = Color.White;
 
             int y = 20;
             int labelWidth = 140;
@@ -114,15 +177,16 @@ namespace WinForms
             Controls.Add(btnSave);
             Controls.Add(btnCancel);
         }
+
         /// <summary>
         /// Создание поля ввода с подписью
         /// </summary>
-        /// <param name="label">Текст подписи слева от поля</param>
+        /// <param name="label">Текст подписи</param>
         /// <param name="y">Координата Y</param>
         /// <param name="leftMargin">Отступ от левого края</param>
         /// <param name="labelWidth">Ширина подписи</param>
         /// <param name="textBoxWidth">Ширина поля ввода</param>
-        /// <returns>Созданный элемент TextBox</returns>
+        /// <returns>Созданный TextBox</returns>
         public TextBox CreateField(string label, ref int y, int leftMargin, int labelWidth, int textBoxWidth)
         {
             Label lbl = new Label();
@@ -141,6 +205,7 @@ namespace WinForms
             y = y + 35;
             return txt;
         }
+
         /// <summary>
         /// Обработчик кнопки "Отмена"
         /// </summary>
@@ -151,76 +216,33 @@ namespace WinForms
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
         /// <summary>
-        /// Обработчик кнопки "Сохранить". Проверяет данные и закрывает форму
+        /// Обработчик кнопки "Сохранить"
         /// </summary>
         /// <param name="sender">Кнопка вызов события</param>
-        /// <param name="e">параметры события</param>
+        /// <param name="e">Параметры события</param>
         public void BtnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtBrand.Text))
-            {
-                MessageBox.Show("Введите бренд!");
-                txtBrand.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtModel.Text))
-            {
-                MessageBox.Show("Введите модель!");
-                txtModel.Focus();
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(txtBrand.Text)) { MessageBox.Show("Введите бренд!"); txtBrand.Focus(); return; }
+            if (string.IsNullOrWhiteSpace(txtModel.Text)) { MessageBox.Show("Введите модель!"); txtModel.Focus(); return; }
 
             int year;
-            if (!int.TryParse(txtYear.Text, out year))
-            {
-                MessageBox.Show("Год должен быть числом!");
-                txtYear.Focus();
-                return;
-            }
-
-            if (year < 2000 || year > DateTime.Now.Year + 1)
-            {
-                MessageBox.Show("Год от 2000 до " + (DateTime.Now.Year + 1));
-                txtYear.Focus();
-                return;
-            }
+            if (!int.TryParse(txtYear.Text, out year)) { MessageBox.Show("Год должен быть числом!"); txtYear.Focus(); return; }
+            if (year < 2000 || year > DateTime.Now.Year + 1) { MessageBox.Show("Год от 2000 до " + (DateTime.Now.Year + 1)); txtYear.Focus(); return; }
 
             decimal price;
-            if (!decimal.TryParse(txtPrice.Text, out price))
-            {
-                MessageBox.Show("Цена должна быть числом!");
-                txtPrice.Focus();
-                return;
-            }
-
-            if (price < 0)
-            {
-                MessageBox.Show("Цена не может быть отрицательной!");
-                txtPrice.Focus();
-                return;
-            }
+            if (!decimal.TryParse(txtPrice.Text, out price)) { MessageBox.Show("Цена должна быть числом!"); txtPrice.Focus(); return; }
+            if (price < 0) { MessageBox.Show("Цена не может быть отрицательной!"); txtPrice.Focus(); return; }
 
             int memory;
-            if (!int.TryParse(txtMemory.Text, out memory))
-            {
-                MessageBox.Show("Память должна быть числом!");
-                txtMemory.Focus();
-                return;
-            }
-
-            if (memory <= 0)
-            {
-                MessageBox.Show("Память больше нуля!");
-                txtMemory.Focus();
-                return;
-            }
+            if (!int.TryParse(txtMemory.Text, out memory)) { MessageBox.Show("Память должна быть числом!"); txtMemory.Focus(); return; }
+            if (memory <= 0) { MessageBox.Show("Память больше нуля!"); txtMemory.Focus(); return; }
 
             Brand = txtBrand.Text.Trim();
             Model = txtModel.Text.Trim();
             Year = year;
-            PhoneColor = txtColor.Text.Trim();   
+            PhoneColor = txtColor.Text.Trim();
             Price = price;
             Memory = memory;
             Availability = chkAvailability.Checked;

@@ -10,26 +10,96 @@ namespace WinForms
     /// <summary>
     /// Главная форма приложения (реализация View)
     /// </summary>
-    public class MainForm : Form, Shared.IView
+    public class MainForm : Form, IView
     {
+        /// <summary>
+        /// Таблица для отображения телефонов
+        /// </summary>
         public DataGridView gridPhones;
+
+        /// <summary>
+        /// Кнопка добавления телефона
+        /// </summary>
         public Button btnAdd;
+
+        /// <summary>
+        /// Кнопка показать/скрыть список
+        /// </summary>
         public Button btnToggleView;
+
+        /// <summary>
+        /// Кнопка поиска телефона по ID
+        /// </summary>
         public Button btnFindById;
+
+        /// <summary>
+        /// Кнопка редактирования телефона
+        /// </summary>
         public Button btnEdit;
+
+        /// <summary>
+        /// Кнопка удаления телефона
+        /// </summary>
         public Button btnDelete;
+
+        /// <summary>
+        /// Кнопка группировки по памяти
+        /// </summary>
         public Button btnGroupMemory;
+
+        /// <summary>
+        /// Кнопка топ дорогих телефонов
+        /// </summary>
         public Button btnTopExpensive;
+
+        /// <summary>
+        /// Заголовок списка телефонов
+        /// </summary>
         public Label lblTitle;
+
+        /// <summary>
+        /// Счетчик количества телефонов
+        /// </summary>
         public Label lblCount;
+
+        /// <summary>
+        /// Подсказка для пользователя
+        /// </summary>
         public Label lblHint;
 
+        /// <summary>
+        /// Событие: нажата кнопка "Добавить"
+        /// </summary>
         public event Action AddPhoneClicked;
+
+        /// <summary>
+        /// Событие: нажата кнопка "Удалить" (передает ID)
+        /// </summary>
         public event Action<int> DeletePhoneClicked;
+
+        /// <summary>
+        /// Событие: нажата кнопка "Обновить"
+        /// </summary>
         public event Action RefreshClicked;
+
+        /// <summary>
+        /// Событие: нажата кнопка "Найти по ID" (передает ID)
+        /// </summary>
         public event Action<int> FindPhoneClicked;
+
+        /// <summary>
+        /// Событие: нажата кнопка "Редактировать" (передает ID)
+        /// </summary>
         public event Action<int> EditPhoneClicked;
+
+        /// <summary>
+        /// Событие: нажата кнопка "Группировка по памяти"
+        /// </summary>
         public event Action GroupMemoryClicked;
+
+        /// <summary>
+        /// Событие: нажата кнопка "Топ дорогих" (передает количество)
+        /// </summary>
         public event Action<int> TopExpensiveClicked;
 
         /// <summary>
@@ -81,7 +151,6 @@ namespace WinForms
             lblHint.TextAlign = ContentAlignment.MiddleCenter;
             lblHint.ForeColor = Color.Gray;
 
-            
             btnAdd = CreateButton("Добавить", 820, 60);
             btnAdd.Click += BtnAdd_Click;
 
@@ -126,6 +195,10 @@ namespace WinForms
         /// <summary>
         /// Создание кнопки с заданными параметрами
         /// </summary>
+        /// <param name="text">Текст кнопки</param>
+        /// <param name="x">Координата X</param>
+        /// <param name="y">Координата Y</param>
+        /// <returns>Созданная кнопка</returns>
         private Button CreateButton(string text, int x, int y)
         {
             Button btn = new Button();
@@ -143,8 +216,9 @@ namespace WinForms
         }
 
         /// <summary>
-        /// Отрисовать список телефонов в таблице
+        /// Отрисовка списка телефонов в таблице
         /// </summary>
+        /// <param name="phones">Список телефонов для отображения</param>
         public void ShowPhones(IEnumerable<object> phones)
         {
             gridPhones.Rows.Clear();
@@ -177,15 +251,26 @@ namespace WinForms
         }
 
         /// <summary>
-        /// Показать сообщение пользователю
+        /// Показ всплывающего сообщения
         /// </summary>
+        /// <param name="message">Текст сообщения</param>
         public void ShowMessage(string message)
         {
             MessageBox.Show(message);
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Добавить"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnAdd_Click(object sender, EventArgs e) => AddPhoneClicked?.Invoke();
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Удалить"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnDelete_Click(object sender, EventArgs e)
         {
             if (gridPhones.SelectedRows.Count > 0)
@@ -195,12 +280,22 @@ namespace WinForms
             }
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Найти по ID"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnFindById_Click(object sender, EventArgs e)
         {
             string input = Microsoft.VisualBasic.Interaction.InputBox("Введите ID телефона:", "Поиск по ID", "");
             if (int.TryParse(input, out int id)) FindPhoneClicked?.Invoke(id);
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Редактировать"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnEdit_Click(object sender, EventArgs e)
         {
             if (gridPhones.SelectedRows.Count > 0)
@@ -210,15 +305,29 @@ namespace WinForms
             }
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Группировка по памяти"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnGroupMemory_Click(object sender, EventArgs e) => GroupMemoryClicked?.Invoke();
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Топ дорогих"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnTopExpensive_Click(object sender, EventArgs e)
         {
             string input = Microsoft.VisualBasic.Interaction.InputBox("Сколько показать?", "Топ дорогих", "3");
             if (int.TryParse(input, out int count)) TopExpensiveClicked?.Invoke(count);
         }
 
-
+        /// <summary>
+        /// Обработчик нажатия кнопки "Показать все / Скрыть"
+        /// </summary>
+        /// <param name="sender">Кнопка вызов события</param>
+        /// <param name="e">Параметры события</param>
         private void BtnToggleView_Click(object sender, EventArgs e)
         {
             if (gridPhones.Visible == false)

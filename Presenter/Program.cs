@@ -11,14 +11,15 @@ namespace Presenter
     /// </summary>
     internal static class Program
     {
+        /// <summary>
+        /// Точка входа. Спрашивает пользователя, какое представление использовать.
+        /// </summary>
         [STAThread]
         static void Main()
         {
-            // 1. Создаем IoC-контейнер и достаем бизнес-логику
             IKernel kernel = new StandardKernel(new SimpleConfigModule());
             ILogic logic = kernel.Get<ILogic>();
 
-            // 2. Спрашиваем у пользователя, какое представление использовать
             Console.WriteLine("Выберите представление:");
             Console.WriteLine("1 — Консоль");
             Console.WriteLine("2 — WinForms");
@@ -27,21 +28,15 @@ namespace Presenter
 
             if (choice == "1")
             {
-                // Запуск консольного представления
-                // ВАЖНО: Чтобы это работало, класс ConsolePresenter должен быть в этом же проекте (или в Console)
-                // Если у тебя его нет, используй старый код из Console, но вызови его здесь.
                 var consolePresenter = new ConsolePresenter(logic);
                 consolePresenter.Run();
             }
             else if (choice == "2")
             {
-                // Запуск WinForms
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-
                 MainForm view = new MainForm();
                 PhonePresenter presenter = new PhonePresenter(view, logic);
-
                 Application.Run(view);
             }
             else
