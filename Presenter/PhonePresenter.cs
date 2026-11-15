@@ -99,7 +99,18 @@ namespace Presenter
             var phone = _logic.PhoneId(id);
             if (phone == null) { _view.ShowMessage("Телефон не найден!"); return; }
 
-            var form = new AddEditForm(phone);
+            var dto = new PhoneDto()
+            {
+                Id = phone.Id,
+                Brand = phone.Brand,
+                Model = phone.Model,
+                Year = phone.Year,
+                Color = phone.Color,
+                Memory = phone.Memory,
+                Price = phone.Price,
+                Availability = phone.Availability
+            };
+            var form = new AddEditForm(dto);
             if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 _logic.UpdatePhone(id, form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);

@@ -12,10 +12,10 @@ namespace Shared
     public class PhoneDto
     {
         public int Id { get; set; }
-        public string Brand { get; set; }
-        public string Model { get; set; }
+        public string Brand { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
         public int Year { get; set; }
-        public string Color { get; set; }
+        public string Color { get; set; } = string.Empty;
         public int Memory { get; set; }
         public decimal Price { get; set; }
         public bool Availability { get; set; }

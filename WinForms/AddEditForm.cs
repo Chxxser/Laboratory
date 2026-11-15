@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Model;
+using Shared;
+
 
 namespace WinForms
 {
@@ -94,7 +95,7 @@ namespace WinForms
         /// Конструктор формы добавления/редактирования
         /// </summary>
         /// <param name="phone">Телефон для редактирования</param>
-        public AddEditForm(Phone phone = null)
+        public AddEditForm(PhoneDto phone = null)
         {
             BuildForm();
             if (phone != null)
