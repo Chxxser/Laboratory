@@ -14,37 +14,37 @@ namespace WinForms
         /// <summary>
         /// Бренд телефона
         /// </summary>
-        public string Brand { get; private set; }
+        public string Brand { get; set; }
 
         /// <summary>
         /// Модель телефона
         /// </summary>
-        public string Model { get; private set; }
+        public string Model { get; set; }
 
         /// <summary>
         /// Год выпуска
         /// </summary>
-        public int Year { get; private set; }
+        public int Year { get; set; }
 
         /// <summary>
         /// Цвет телефона
         /// </summary>
-        public string PhoneColor { get; private set; }
+        public string PhoneColor { get; set; }
 
         /// <summary>
         /// Цена в рублях
         /// </summary>
-        public decimal Price { get; private set; }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Объем памяти в ГБ
         /// </summary>
-        public int Memory { get; private set; }
+        public int Memory { get; set; }
 
         /// <summary>
         /// Наличие на складе
         /// </summary>
-        public bool Availability { get; private set; }
+        public bool Availability { get; set; }
 
         /// <summary>
         /// Поле ввода бренда
@@ -117,7 +117,7 @@ namespace WinForms
         }
 
         /// <summary>
-        /// Построение интерфейса формы
+        /// Построение интерфейса форма
         /// </summary>
         public void BuildForm()
         {

@@ -42,12 +42,16 @@ namespace Logic
         /// <param name="availability">Наличие на складе</param>
         /// <returns>Созданный телефон</returns>
         public Phone AddPhone(string brand, string model, int year, string color, decimal price, int memory, bool availability)
-            => _phoneService.AddPhone(brand, model, year, color, price, memory, availability);
+        {
+            var phone = _phoneService.AddPhone(brand, model, year, color, price, memory, availability);
+            DataChanged?.Invoke();
+            return phone;
+        }
 
         /// <summary>
         /// Список всех телефонов
         /// </summary>
-        /// <returns>Список всех телефонов</returns>
+        /// <returns>Список телефонов</returns>
         public List<Phone> AllPhone() => _phoneService.AllPhone();
 
         /// <summary>
@@ -70,14 +74,23 @@ namespace Logic
         /// <param name="availability">В наличии ли</param>
         /// <returns>True если успешно, False при ошибке</returns>
         public bool UpdatePhone(int id, string brand, string model, int year, string color, decimal price, int memory, bool availability)
-            => _phoneService.UpdatePhone(id, brand, model, year, color, price, memory, availability);
+        {
+            var result = _phoneService.UpdatePhone(id, brand, model, year, color, price, memory, availability);
+            if (result) DataChanged?.Invoke();
+            return result;
+        }
 
         /// <summary>
         /// Удалить телефон
         /// </summary>
         /// <param name="id">ID телефона</param>
         /// <returns>True если успешно, False при ошибке</returns>
-        public bool DeletePhone(int id) => _phoneService.DeletePhone(id);
+        public bool DeletePhone(int id)
+        {
+            var result = _phoneService.DeletePhone(id);
+            if (result) DataChanged?.Invoke();
+            return result;
+        }
 
         /// <summary>
         /// Группировка по памяти
@@ -86,7 +99,7 @@ namespace Logic
         public Dictionary<int, List<Phone>> GroupMemory() => _analyticsService.GroupMemory();
 
         /// <summary>
-        /// Топ N дорогих
+        /// Топ N дорогих телефонов
         /// </summary>
         /// <param name="count">количество N</param>
         /// <returns>Список телефонов</returns>

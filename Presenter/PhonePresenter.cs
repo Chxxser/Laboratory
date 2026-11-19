@@ -44,7 +44,6 @@ namespace Presenter
             {
                 _logic.AddPhone(form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);
                 _view.ShowMessage("Телефон добавлен!");
-                OnRefresh();
             }
         }
 
@@ -56,7 +55,6 @@ namespace Presenter
         {
             _logic.DeletePhone(id);
             _view.ShowMessage("Телефон удален!");
-            OnRefresh();
         }
 
         /// <summary>
@@ -115,7 +113,6 @@ namespace Presenter
             {
                 _logic.UpdatePhone(id, form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);
                 _view.ShowMessage("Телефон обновлён!");
-                OnRefresh();
             }
         }
 
