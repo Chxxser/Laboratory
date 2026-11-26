@@ -102,6 +102,16 @@ namespace WinForms
         public event Action<int> TopExpensiveClicked;
 
         /// <summary>
+        /// Событие: запрошены данные для добавления телефона это для консоли
+        /// </summary>
+        public event Action<PhoneDto> AddPhoneRequested;
+
+        /// <summary>
+        /// Событие: запрошены данные для редактирования телефона. это для консоли
+        /// </summary>
+        public event Action<PhoneDto> EditPhoneRequested;
+
+        /// <summary>
         /// Конструктор главной формы
         /// </summary>
         public MainForm()

@@ -11,7 +11,7 @@ namespace Logic
         /// <summary>
         /// Событие при изменении данных (добавление, удаление, редактирование)
         /// </summary>
-        event Action DataChanged;
+        event Action<List<Phone>> DataChanged;
 
         /// <summary>
         /// Добавить новый телефон

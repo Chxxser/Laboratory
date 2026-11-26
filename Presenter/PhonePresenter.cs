@@ -4,16 +4,24 @@ using Shared;
 using Logic;
 using WinForms;
 using Model;
+using ConsoleApp;
 
 namespace Presenter
 {
     /// <summary>
-    /// Презентер, связывающий View и Model (бизнес-логику)
+    /// Презентер, связывающий view и model
     /// </summary>
     public class PhonePresenter
     {
-        private readonly IView _view;
-        private readonly ILogic _logic;
+        /// <summary>
+        /// Ссылка на представление (интерфейс IView)
+        /// </summary>
+        public readonly IView _view;
+
+        /// <summary>
+        /// Ссылка на бизнес-логику (интерфейс ILogic)
+        /// </summary>
+        public readonly ILogic _logic;
 
         /// <summary>
         /// Конструктор презентера
@@ -26,32 +34,50 @@ namespace Presenter
             _logic = logic;
             _view.AddPhoneClicked += OnAddPhone;
             _view.DeletePhoneClicked += OnDeletePhone;
-            _view.RefreshClicked += OnRefresh;
             _view.FindPhoneClicked += OnFindPhone;
+            _view.RefreshClicked += () => _logic.AllPhone();
             _view.EditPhoneClicked += OnEditPhone;
             _view.GroupMemoryClicked += OnGroupMemory;
             _view.TopExpensiveClicked += OnTopExpensive;
+            _view.AddPhoneRequested += OnAddPhoneData;
+            _view.EditPhoneRequested += OnEditPhoneData;
             _logic.DataChanged += OnRefresh;
         }
 
         /// <summary>
-        /// Обработчик добавления телефона
+        /// Обработчик добавления телефона (вызывается при нажатии кнопки)
         /// </summary>
-        private void OnAddPhone()
+        public void OnAddPhone()
         {
-            var form = new AddEditForm();
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (_view is MainForm)
             {
-                _logic.AddPhone(form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);
-                _view.ShowMessage("Телефон добавлен!");
+                var form = new AddEditForm();
+                if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    _logic.AddPhone(form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);
+                    _view.ShowMessage("Телефон добавлен!");
+                }
             }
+            else if (_view is ConsoleView consoleView)
+            {
+                consoleView.RequestAddPhone();
+            }
+        }
+
+        /// <summary>
+        /// Обработчик данных добавления телефона (приходит из консоли)
+        /// </summary>
+        public void OnAddPhoneData(PhoneDto dto)
+        {
+            _logic.AddPhone(dto.Brand, dto.Model, dto.Year, dto.Color, dto.Price, dto.Memory, dto.Availability);
+            _view.ShowMessage("Телефон добавлен!");
         }
 
         /// <summary>
         /// Обработчик удаления телефона
         /// </summary>
         /// <param name="id">ID телефона</param>
-        private void OnDeletePhone(int id)
+        public void OnDeletePhone(int id)
         {
             _logic.DeletePhone(id);
             _view.ShowMessage("Телефон удален!");
@@ -60,9 +86,8 @@ namespace Presenter
         /// <summary>
         /// Обработчик обновления списка (перерисовка)
         /// </summary>
-        private void OnRefresh()
+        public void OnRefresh(List<Phone> phones)
         {
-            var phones = _logic.AllPhone();
             var dtos = phones.Select(p => new PhoneDto()
             {
                 Id = p.Id,
@@ -81,7 +106,7 @@ namespace Presenter
         /// Обработчик поиска по ID
         /// </summary>
         /// <param name="id">ID телефона</param>
-        private void OnFindPhone(int id)
+        public void OnFindPhone(int id)
         {
             var phone = _logic.PhoneId(id);
             if (phone != null) _view.ShowMessage(phone.ToString());
@@ -89,10 +114,10 @@ namespace Presenter
         }
 
         /// <summary>
-        /// Обработчик редактирования телефона
+        /// Обработчик редактирования телефона (вызывается при нажатии кнопки)
         /// </summary>
         /// <param name="id">ID телефона</param>
-        private void OnEditPhone(int id)
+        public void OnEditPhone(int id)
         {
             var phone = _logic.PhoneId(id);
             if (phone == null) { _view.ShowMessage("Телефон не найден!"); return; }
@@ -108,18 +133,35 @@ namespace Presenter
                 Price = phone.Price,
                 Availability = phone.Availability
             };
-            var form = new AddEditForm(dto);
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+
+            if (_view is MainForm)
             {
-                _logic.UpdatePhone(id, form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);
-                _view.ShowMessage("Телефон обновлён!");
+                var form = new AddEditForm(dto);
+                if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    _logic.UpdatePhone(id, form.Brand, form.Model, form.Year, form.PhoneColor, form.Price, form.Memory, form.Availability);
+                    _view.ShowMessage("Телефон обновлён!");
+                }
             }
+            else if (_view is ConsoleView consoleView)
+            {
+                consoleView.RequestEditPhone(dto);
+            }
+        }
+
+        /// <summary>
+        /// Обработчик данных редактирования телефона (приходит из консоли)
+        /// </summary>
+        public void OnEditPhoneData(PhoneDto dto)
+        {
+            _logic.UpdatePhone(dto.Id, dto.Brand, dto.Model, dto.Year, dto.Color, dto.Price, dto.Memory, dto.Availability);
+            _view.ShowMessage("Телефон обновлён!");
         }
 
         /// <summary>
         /// Обработчик группировки по памяти
         /// </summary>
-        private void OnGroupMemory()
+        public void OnGroupMemory()
         {
             var groups = _logic.GroupMemory();
             string message = "Группировка по памяти:\n";
@@ -135,7 +177,7 @@ namespace Presenter
         /// Обработчик топ-N самых дорогих
         /// </summary>
         /// <param name="count">Количество телефонов</param>
-        private void OnTopExpensive(int count)
+        public void OnTopExpensive(int count)
         {
             var top = _logic.ExpensivePhones(count);
             string message = $"Топ-{count} дорогих:\n";

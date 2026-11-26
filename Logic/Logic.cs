@@ -28,7 +28,7 @@ namespace Logic
         /// <summary>
         /// Событие при изменении данных (добавление, удаление, редактирование)
         /// </summary>
-        public event Action DataChanged;
+        public event Action<List<Phone>> DataChanged;
 
         /// <summary>
         /// Добавить новый телефон
@@ -44,7 +44,7 @@ namespace Logic
         public Phone AddPhone(string brand, string model, int year, string color, decimal price, int memory, bool availability)
         {
             var phone = _phoneService.AddPhone(brand, model, year, color, price, memory, availability);
-            DataChanged?.Invoke();
+            DataChanged?.Invoke(AllPhone());
             return phone;
         }
 
@@ -52,7 +52,12 @@ namespace Logic
         /// Список всех телефонов
         /// </summary>
         /// <returns>Список телефонов</returns>
-        public List<Phone> AllPhone() => _phoneService.AllPhone();
+        public List<Phone> AllPhone()
+        {
+            var phones = _phoneService.AllPhone();
+            DataChanged?.Invoke(phones);
+            return phones;
+        }
 
         /// <summary>
         /// Найти телефон по ID
@@ -76,7 +81,7 @@ namespace Logic
         public bool UpdatePhone(int id, string brand, string model, int year, string color, decimal price, int memory, bool availability)
         {
             var result = _phoneService.UpdatePhone(id, brand, model, year, color, price, memory, availability);
-            if (result) DataChanged?.Invoke();
+            if (result) DataChanged?.Invoke(AllPhone());
             return result;
         }
 
@@ -88,7 +93,7 @@ namespace Logic
         public bool DeletePhone(int id)
         {
             var result = _phoneService.DeletePhone(id);
-            if (result) DataChanged?.Invoke();
+            if (result) DataChanged?.Invoke(AllPhone());
             return result;
         }
 

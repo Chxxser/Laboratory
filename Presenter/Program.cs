@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Logic;
 using Ninject;
 using WinForms;
+using ConsoleApp;
 
 namespace Presenter
 {
@@ -12,7 +13,7 @@ namespace Presenter
     internal static class Program
     {
         /// <summary>
-        /// Точка входа. Спрашивает пользователя, какое представление использовать.
+        /// Точка входа. Спрашивает какое представление
         /// </summary>
         [STAThread]
         static void Main()
@@ -28,8 +29,9 @@ namespace Presenter
 
             if (choice == "1")
             {
-                var consolePresenter = new ConsolePresenter(logic);
-                consolePresenter.Run();
+                var consoleView = new ConsoleApp.ConsoleView();
+                var presenter = new PhonePresenter(consoleView, logic);
+                consoleView.Run();
             }
             else if (choice == "2")
             {

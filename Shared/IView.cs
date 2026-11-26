@@ -44,6 +44,16 @@ namespace Shared
         event Action<int> TopExpensiveClicked;
 
         /// <summary>
+        /// Событие: запрошены данные для добавления телефона (передает DTO)
+        /// </summary>
+        event Action<PhoneDto> AddPhoneRequested;
+
+        /// <summary>
+        /// Событие: запрошены данные для редактирования телефона (передает DTO)
+        /// </summary>
+        event Action<PhoneDto> EditPhoneRequested;
+
+        /// <summary>
         /// Отрисовать список телефонов в таблице
         /// </summary>
         /// <param name="phones">Список телефонов для отображения</param>
